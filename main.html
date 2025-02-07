@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Сюрприз на 14 февраля</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: linear-gradient(to bottom, #ff99cc, #ff3366);
+            overflow: hidden;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            animation: backgroundPulse 5s infinite alternate;
+            -webkit-font-smoothing: antialiased;
+        }
+        @keyframes backgroundPulse {
+            0% { background: linear-gradient(to bottom, #ff99cc, #ff3366); }
+            100% { background: linear-gradient(to bottom, #ff6699, #ff0033); }
+        }
+
+        /* Звездочки */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite ease-in-out;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); }
+        }
+
+        /* Сердечки */
+        .hearts, .rose-petals {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        .heart {
+            position: absolute;
+            bottom: -10px;
+            width: 40px;
+            height: 40px;
+            background-color: red;
+            clip-path: polygon(50% 0%, 100% 35%, 80% 100%, 50% 75%, 20% 100%, 0% 35%);
+            opacity: 0.8;
+            animation: floatUp 5s linear infinite;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
+        }
+
+        /* Петали роз */
+        .petal {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: pink;
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: fallDown 4s linear infinite;
+        }
+        @keyframes fallDown {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Вступительное сообщение */
+        .greeting {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            font-size: 18px;
+            animation: fadeIn 2s ease-in-out;
+            max-width: 400px;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Мигающий текст "Люблю" */
+        .blinking-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff1493;
+            animation: blink 1s infinite alternate;
+        }
+        @keyframes blink {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Кнопка "Продолжить" */
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
+            background: #ff69b4;
+            color: white;
+        }
+        button:hover, button:active {
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Вопросы */
+        .question-container {
+            display: none;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            font-size: 18px;
+            animation: bounceIn 1s ease-in-out;
+            touch-action: manipulation;
+            max-width: 400px;
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            80% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+
+        /* Форма для сообщения */
+        .message-form {
+            display: none;
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+        .message-form textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ff69b4;
+            border-radius: 10px;
+            resize: none;
+        }
+
+        /* Текст "Я тебя очень люблю!" */
+        .final-message {
+            display: none;
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff1493;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+    </style>
+</head>
+<body ontouchstart="">
+    <audio id="music" autoplay loop>
+        <source src="romantic-music.mp3" type="audio/mpeg">
+    </audio>
+    <div class="stars"></div>
+    <div class="hearts"></div>
+    <div class="rose-petals"></div>
+
+    <!-- Вступительное сообщение -->
+    <div class="greeting" id="greeting">
+        <p>С Днём святого Валентина!</p>
+        <p>Ты — моя самая большая радость!</p>
+        <p>Я тебя очень сильно...</p>
+        <span class="blinking-text">Люблю ❤️</span>
+        <button onclick="startGame()">Продолжить</button>
+    </div>
+
+    <!-- Вопросы -->
+    <div class="question-container" id="questionContainer">
+        <p id="questionText">Любишь меня? 💕</p>
+        <button class="yes" onclick="nextQuestion(true)">Да 💖</button>
+        <button class="no" onclick="nextQuestion(false)">Нет 😢</button>
+    </div>
+
+    <!-- Форма для сообщения -->
+    <div class="message-form">
+        <h3>Напиши мне сообщение:</h3>
+        <textarea id="messageInput" placeholder="Твое сообщение..."></textarea>
+        <button onclick="sendMessage()">Отправить ❤️</button>
+    </div>
+
+    <!-- Финальное сообщение -->
+    <div class="final-message">Я тебя очень люблю! 💖🎉</div>
+
+    <script>
+        // Запуск музыки при первом касании
+        document.body.addEventListener('touchstart', function() {
+            document.getElementById('music').play();
+        }, false);
+
+        // Создание звездочек
+        function createStar() {
+            const star = document.createElement("div");
+            star.classList.add("star");
+            star.style.left = Math.random() * 100 + "vw";
+            star.style.top = Math.random() * 100 + "vh";
+            star.style.animationDuration = Math.random() * 2 + 2 + "s";
+            document.querySelector(".stars").appendChild(star);
+            setTimeout(() => star.remove(), 3000);
+        }
+        setInterval(createStar, 200);
+
+        // Создание сердечек
+        function createHeart() {
+            const heart = document.createElement("div");
+            heart.classList.add("heart");
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.animationDuration = Math.random() * 2 + 3 + "s";
+            document.querySelector(".hearts").appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }
+        setInterval(createHeart, 150);
+
+        // Создание лепестков
+        function createPetal() {
+            const petal = document.createElement("div");
+            petal.classList.add("petal");
+            petal.style.left = Math.random() * 100 + "vw";
+            petal.style.animationDuration = Math.random() * 2 + 4 + "s";
+            document.querySelector(".rose-petals").appendChild(petal);
+            setTimeout(() => petal.remove(), 4000);
+        }
+        setInterval(createPetal, 200);
+
+        // Начало игры
+        function startGame() {
+            document.getElementById("greeting").style.display = "none";
+            document.getElementById("questionContainer").style.display = "block";
+        }
+
+        // Обработка вопросов
+        const questions = [
+            "Любишь меня? 💕",
+            "Ты моя самая любимая? 😍",
+            "Будешь моей навсегда? 💑",
+            "Мы завтра идём в кино? хи-хи 🍽️"
+        ];
+        let index = 0;
+
+        function nextQuestion(answer) {
+            if (answer) {
+                const rect = event.target.getBoundingClientRect();
+                createClickHeart(rect.left + rect.width / 2, rect.top + rect.height / 2);
+                index++;
+                if (index < questions.length) {
+                    const questionElement = document.getElementById("questionText");
+                    questionElement.innerText = questions[index];
+                    questionElement.style.animation = "rotateText 0.5s ease-in-out";
+                    setTimeout(() => questionElement.style.animation = "", 500);
+                } else {
+                    document.querySelector(".question-container").style.display = "none";
+                    document.querySelector(".message-form").style.display = "block";
+                }
+            } else {
+                alert("Попробуй ещё раз! 😊");
+            }
+        }
+
+        // Создание сердечка при клике
+        function createClickHeart(x, y) {
+            const clickHeart = document.createElement("div");
+            clickHeart.classList.add("click-heart");
+            clickHeart.style.left = x + "px";
+            clickHeart.style.top = y + "px";
+            document.body.appendChild(clickHeart);
+            setTimeout(() => clickHeart.remove(), 500);
+        }
+
+        // Отправка сообщения через Telegram Bot
+        function sendMessage() {
+            const message = document.getElementById("messageInput").value.trim();
+            if (!message) {
+                alert("Пожалуйста, напишите сообщение!");
+                return;
+            }
+
+            const BOT_TOKEN = "7553626655:AAE77hiII6_z6lDBgfHLCXs1ZdNMeRm4mRY"; // Ваш токен бота
+            const CHAT_ID = "5035772785"; // Ваш chat_id
+
+            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(message)}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.ok) {
+                        document.querySelector(".message-form").style.display = "none";
+                        document.querySelector(".final-message").style.display = "block";
+                    } else {
+                        alert(`Произошла ошибка: ${data.description}`);
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка:', error.message);
+                    alert(`Произошла ошибка: ${error.message}`);
+                });
+        }
+    </script>
+</body>
+</html>
